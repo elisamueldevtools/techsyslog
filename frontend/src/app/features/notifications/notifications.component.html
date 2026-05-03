@@ -1,0 +1,21 @@
+<header class="page-header">
+  <h1>Notificações</h1>
+  <button (click)="refresh()">Atualizar</button>
+</header>
+
+<ul class="list">
+  @for (n of api.items(); track n.id) {
+    <li class="item" [class.unread]="!n.read">
+      <div class="meta">
+        <span class="type" [class]="n.type">{{ n.type }}</span>
+        <span class="time">{{ n.createdAt | date:'short' }}</span>
+      </div>
+      <p class="message">{{ n.message }}</p>
+      @if (!n.read) {
+        <button class="read-btn" (click)="markRead(n)">Marcar como lida</button>
+      }
+    </li>
+  } @empty {
+    <li class="empty">Nenhuma notificação.</li>
+  }
+</ul>

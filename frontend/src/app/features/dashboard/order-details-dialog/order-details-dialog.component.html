@@ -1,0 +1,60 @@
+<div class="modal-backdrop" (click)="onBackdropClick()">
+  <div class="modal" (click)="$event.stopPropagation()" role="dialog" aria-modal="true">
+    <header>
+      <h3>Detalhes do pedido</h3>
+      <button type="button" class="close-btn" (click)="close.emit()" aria-label="Fechar">×</button>
+    </header>
+
+    @if (loading()) {
+      <p class="state">Carregando…</p>
+    } @else if (error()) {
+      <p class="state error">{{ error() }}</p>
+    } @else if (data(); as d) {
+      <section class="block">
+        <h4>Pedido</h4>
+        <dl>
+          <dt>Número</dt><dd>{{ d.order.orderNumber }}</dd>
+          <dt>Descrição</dt><dd>{{ d.order.description }}</dd>
+          <dt>Valor</dt><dd>{{ d.order.value | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</dd>
+          <dt>Status</dt><dd>{{ statusLabel[d.order.status] }}</dd>
+          <dt>Criado em</dt><dd>{{ d.order.createdAt | date:'dd/MM/yyyy HH:mm' }}</dd>
+          @if (d.order.observation) {
+            <dt>Observação</dt><dd>{{ d.order.observation }}</dd>
+          }
+        </dl>
+      </section>
+
+      <section class="block">
+        <h4>Endereço</h4>
+        <p>
+          {{ d.order.address.street }}, {{ d.order.address.number }}
+          @if (d.order.address.complement) { — {{ d.order.address.complement }} }
+          <br>
+          {{ d.order.address.neighborhood }} — {{ d.order.address.city }} / {{ d.order.address.state }}
+          <br>
+          CEP: {{ d.order.address.cep }}
+        </p>
+      </section>
+
+      <section class="block">
+        <h4>Entregas ({{ d.deliveries.length }})</h4>
+        @if (d.deliveries.length === 0) {
+          <p class="empty">Nenhuma entrega registrada.</p>
+        } @else {
+          <ul class="deliveries">
+            @for (dlv of d.deliveries; track dlv.id) {
+              <li>
+                <strong>{{ dlv.deliveredAt | date:'dd/MM/yyyy HH:mm' }}</strong>
+                @if (dlv.notes) { <span class="notes">— {{ dlv.notes }}</span> }
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    }
+
+    <footer>
+      <button type="button" class="btn btn-primary" (click)="close.emit()">Fechar</button>
+    </footer>
+  </div>
+</div>

@@ -1,0 +1,99 @@
+<header class="page-header">
+  <h1>Pedidos</h1>
+</header>
+
+<section class="panel">
+  <h2>Novo pedido</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
+    <label>
+      Número
+      <input
+        formControlName="orderNumber"
+        type="text"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        maxlength="20"
+        autocomplete="off" />
+      @if (form.controls.orderNumber.touched && form.controls.orderNumber.invalid) {
+        <small class="field-error">
+          @if (form.controls.orderNumber.errors?.['required']) {
+            Número do pedido é obrigatório.
+          } @else if (form.controls.orderNumber.errors?.['pattern']) {
+            Número do pedido deve conter apenas dígitos.
+          } @else if (form.controls.orderNumber.errors?.['maxlength']) {
+            Número do pedido deve ter no máximo 20 dígitos.
+          }
+        </small>
+      }
+    </label>
+    <label>Descrição<input formControlName="description" /></label>
+    <label>Valor<input type="number" step="0.01" formControlName="value" /></label>
+    <label>CEP (8 dígitos)<input formControlName="cep" /></label>
+    <label>Número<input formControlName="number" /></label>
+    <label>Complemento (opcional)<input formControlName="complement" maxlength="100" /></label>
+    <label class="full-width">
+      Observação (opcional)
+      <textarea formControlName="observation" maxlength="500" rows="3"></textarea>
+    </label>
+    <button type="submit" [disabled]="form.invalid || creating()">
+      {{ creating() ? 'Criando…' : 'Criar pedido' }}
+    </button>
+  </form>
+
+  @if (cepLoading()) {
+    <p class="cep-preview cep-preview--loading">Buscando endereço…</p>
+  } @else if (cepLookupError()) {
+    <p class="cep-preview cep-preview--error">{{ cepLookupError() }}</p>
+  } @else if (addressPreview(); as a) {
+    <div class="cep-preview cep-preview--ok">
+      <strong>Endereço:</strong>
+      {{ a.street }}, {{ a.neighborhood }} — {{ a.city }} / {{ a.state }}
+    </div>
+  }
+
+  @if (error()) { <p class="error">{{ error() }}</p> }
+</section>
+
+<section class="panel">
+  <header class="panel-header">
+    <h2>Lista</h2>
+    <button (click)="refresh()" [disabled]="loading()">Atualizar</button>
+  </header>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Número</th><th>Status</th><th>Valor</th><th>Criado em</th><th>Mudar status</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (o of orders(); track o.id) {
+        <tr>
+          <td>{{ o.orderNumber }}</td>
+          <td><span class="badge" [class]="o.status.toLowerCase()">{{ statusLabel[o.status] }}</span></td>
+          <td>{{ o.value | currency:'BRL' }}</td>
+          <td>{{ o.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>
+            <button
+              type="button"
+              class="btn-link"
+              [disabled]="!canChangeStatus(o)"
+              [title]="canChangeStatus(o) ? '' : 'Pedido finalizado'"
+              (click)="openStatusDialog(o)">
+              Mudar status
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="5" class="empty">Nenhum pedido.</td></tr>
+      }
+    </tbody>
+  </table>
+</section>
+
+@if (dialogTarget(); as t) {
+  <app-change-status-dialog
+    [order]="t"
+    (confirm)="confirmStatus($event)"
+    (cancel)="cancelStatus()" />
+}

@@ -1,0 +1,89 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 10px;
+  padding: 24px;
+  max-width: 420px;
+  width: calc(100% - 32px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+
+  header {
+    margin-bottom: 16px;
+    h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      color: #111827;
+    }
+    p {
+      margin: 0;
+      font-size: 13px;
+      color: #6b7280;
+      strong { color: #111827; }
+    }
+  }
+}
+
+.status-options {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  li label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #374151;
+    transition: background 0.15s, border-color 0.15s;
+
+    &:hover { background: #f9fafb; }
+    input[type="radio"] { accent-color: #2563eb; }
+  }
+}
+
+footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: opacity 0.15s;
+
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  &.btn-primary {
+    background: #2563eb;
+    color: #fff;
+    &:hover:not(:disabled) { background: #1d4ed8; }
+  }
+
+  &.btn-ghost {
+    background: #fff;
+    color: #374151;
+    border-color: #d1d5db;
+    &:hover { background: #f3f4f6; }
+  }
+}

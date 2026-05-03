@@ -1,0 +1,35 @@
+<div class="modal-backdrop" (click)="onBackdropClick()">
+  <div class="modal" (click)="$event.stopPropagation()" role="dialog" aria-modal="true">
+    <header>
+      <h3>Mudar status do pedido {{ order.orderNumber }}</h3>
+      <p>Status atual: <strong>{{ statusLabel[order.status] }}</strong></p>
+    </header>
+
+    <ul class="status-options">
+      @for (s of nextStatuses(); track s) {
+        <li>
+          <label>
+            <input
+              type="radio"
+              name="next-status"
+              [value]="s"
+              [checked]="selected() === s"
+              (change)="selected.set(s)" />
+            {{ statusLabel[s] }}
+          </label>
+        </li>
+      }
+    </ul>
+
+    <footer>
+      <button type="button" class="btn btn-ghost" (click)="cancel.emit()">Cancelar</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="!selected()"
+        (click)="onConfirm()">
+        Confirmar
+      </button>
+    </footer>
+  </div>
+</div>

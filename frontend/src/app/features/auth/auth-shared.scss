@@ -1,0 +1,69 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  padding: 24px;
+}
+
+.auth-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 380px;
+
+  h1 { margin: 0 0 4px; font-size: 20px; color: #1e3a8a; }
+  h2 { margin: 0 0 24px; font-size: 14px; color: #6b7280; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  label {
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    color: #374151;
+    gap: 6px;
+  }
+
+  input {
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    &:focus { outline: 2px solid #2563eb; border-color: transparent; }
+  }
+
+  button {
+    background: #2563eb;
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    &:disabled { opacity: 0.6; cursor: not-allowed; }
+    &:hover:not(:disabled) { background: #1d4ed8; }
+  }
+
+  .error {
+    color: #dc2626;
+    font-size: 13px;
+    margin: 0;
+  }
+
+  .alt {
+    margin: 16px 0 0;
+    font-size: 13px;
+    color: #6b7280;
+    text-align: center;
+    a { color: #2563eb; text-decoration: none; }
+  }
+}

@@ -1,0 +1,87 @@
+<header class="page-header">
+  <h1>Dashboard</h1>
+  <div class="filters">
+    <label>
+      Mês
+      <select [ngModel]="month()" (ngModelChange)="month.set($event); onPeriodChange()">
+        @for (m of months; track m.value) {
+          <option [ngValue]="m.value">{{ m.label }}</option>
+        }
+      </select>
+    </label>
+    <label>
+      Ano
+      <select [ngModel]="year()" (ngModelChange)="year.set($event); onPeriodChange()">
+        @for (y of years(); track y) {
+          <option [ngValue]="y">{{ y }}</option>
+        }
+      </select>
+    </label>
+    <button type="button" (click)="load()" [disabled]="loading()">
+      {{ loading() ? 'Atualizando…' : 'Atualizar' }}
+    </button>
+  </div>
+</header>
+
+<section class="status-cards">
+  @for (s of statusOrder; track s) {
+    <button
+      type="button"
+      class="card"
+      [ngClass]="[statusClass[s], isSelected(s) ? 'selected' : '']"
+      (click)="onCardClick(s)">
+      <span class="label">{{ statusLabel[s] }}</span>
+      <strong class="counter">{{ counter(s) }}</strong>
+    </button>
+  }
+</section>
+
+<section class="grid-panel">
+  <header class="grid-header">
+    <h2>Pedidos</h2>
+    <label>
+      Status
+      <select
+        [ngModel]="selectedStatus()"
+        (ngModelChange)="onStatusFilterChange($event)">
+        <option value="All">Todos</option>
+        @for (s of statusOrder; track s) {
+          <option [ngValue]="s">{{ statusLabel[s] }}</option>
+        }
+      </select>
+    </label>
+  </header>
+
+  <table class="grid">
+    <thead>
+      <tr>
+        <th>Pedido</th>
+        <th>Status</th>
+        <th>Data</th>
+        <th class="actions-col">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of visibleItems(); track item.id) {
+        <tr>
+          <td>{{ item.orderNumber }}</td>
+          <td>
+            @if (statusOf(item.id); as st) {
+              <span class="badge" [ngClass]="statusClass[st]">{{ statusLabel[st] }}</span>
+            }
+          </td>
+          <td>{{ item.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td class="actions-col">
+            <button type="button" class="btn-link" (click)="openDetails(item.id)">Detalhes</button>
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="4" class="empty">Sem pedidos para exibir.</td></tr>
+      }
+    </tbody>
+  </table>
+</section>
+
+@if (detailsTargetId(); as id) {
+  <app-order-details-dialog [orderId]="id" (close)="closeDetails()" />
+}

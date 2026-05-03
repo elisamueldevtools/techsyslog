@@ -1,0 +1,46 @@
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">📦 TechsysLog</div>
+    <nav>
+      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/orders" routerLinkActive="active">Pedidos</a>
+      <a routerLink="/deliveries" routerLinkActive="active">Entregas</a>
+      <a routerLink="/notifications" routerLinkActive="active">
+        Notificações
+        @if (notifications.unreadCount() > 0) {
+          <span class="badge">{{ notifications.unreadCount() }}</span>
+        }
+      </a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="status" [class.connected]="status() === 'connected'">
+        <span class="dot"></span>
+        Realtime: {{ status() }}
+      </div>
+      <div class="user">
+        <button
+          type="button"
+          class="notif-btn"
+          (click)="goToNotifications()"
+          [attr.aria-label]="'Notificações: ' + notifications.unreadCount() + ' não lidas'">
+          <svg class="notif-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path
+              fill="currentColor"
+              d="M12 22a2.4 2.4 0 0 0 2.4-2.4H9.6A2.4 2.4 0 0 0 12 22Zm7.2-5.6V11c0-3.4-2.05-6.25-5.2-6.95V3.4a2 2 0 1 0-4 0v.65C6.85 4.75 4.8 7.6 4.8 11v5.4L3 18.2V19.2h18V18.2l-1.8-1.8Z" />
+          </svg>
+          @if (notifications.unreadCount() > 0) {
+            <span class="notif-badge">{{ notifications.unreadCount() > 99 ? '99+' : notifications.unreadCount() }}</span>
+          }
+        </button>
+        <span class="user-name">{{ user()?.unique_name || user()?.email || 'usuário' }}</span>
+        <button type="button" (click)="logout()">Sair</button>
+      </div>
+    </header>
+    <section class="content">
+      <router-outlet />
+    </section>
+  </main>
+</div>
